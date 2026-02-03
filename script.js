@@ -25,8 +25,17 @@ function stopTracking() {
   if (watchId !== null) {
     navigator.geolocation.clearWatch(watchId);
   }
+
+  const carbonSaved = totalDistance * CAR_CO2_PER_KM;
+
+  document.getElementById("result").textContent =
+    `🎉 คุณได้ลดคาร์บอนไป ${carbonSaved.toFixed(1)} gCO₂ จากการเดิน ${totalDistance.toFixed(3)} km`;
+
   watchId = null;
   lastPosition = null;
+
+  totalDistance = 0;
+  updateUI();
 }
 
 function onSuccess(position) {
