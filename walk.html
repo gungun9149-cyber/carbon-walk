@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>NU Healthyzerocarbon</title>
+
+  <!-- สำคัญมากสำหรับมือถือ -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <link rel="icon" href="image/Icon NU.png">
+  <link rel="stylesheet" href="walk.css" />
+</head>
+<body>
+
+  <div class="app">
+    <h1>🚶‍♂️ NU HealthyZerocarbon</h1>
+
+    <div class="card">
+      <div class="item">
+        <span class="label">ระยะทาง</span>
+        <span class="value"><span id="distance">0</span> km</span>
+      </div>
+
+      <div class="item">
+        <span class="label">ลดคาร์บอน</span>
+        <span class="value green"><span id="carbon">0</span> gCO₂</span>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="start" onclick="startTracking()">เริ่มเดิน</button>
+      <button class="stop" onclick="stopTracking()">หยุด</button>
+    </div>
+
+    <p id="result" style="font-size:16px;color:#1b5e20;"></p>
+
+    <p class="hint">📍 กรุณาเปิด GPS และใช้งานบนมือถือ</p>
+  </div>
+
+  <a href="index.html">ย้อนกลับ</a>
+
+  <script src="script.js"></script>
+</body>
+</html>
