@@ -14,8 +14,9 @@ body { background: #eef2f5; display: flex; justify-content: center; align-items:
 
 /* iPhone Frame */
 .device-container {
-    width: 375px; height: 812px; background: #fff;
-    border-radius: 45px; border: 10px solid #1a1a1a;
+    width: 100%; 
+    max-width: 768px; 
+    background: #fff;
     position: relative; overflow: hidden;
     display: flex; flex-direction: column;
 }
