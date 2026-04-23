@@ -163,3 +163,9 @@ body { background: rgb(227, 255, 227); display: flex; justify-content: center; a
 .nav-item { border: none; background: none; font-size: 22px; color: #ddd; cursor: pointer; }
 .nav-item.active { color: #4cd964; }
 .nav-item.plus { width: 55px; height: 55px; background: #1a1a1a; color: #fff; border-radius: 50%; margin-top: -45px; border: 5px solid #fff; }
+
+.map {
+  width: 100%;
+  height: 100%;
+  border-radius: 30px;
+}

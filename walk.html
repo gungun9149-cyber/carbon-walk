@@ -1,43 +1,210 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <title>NU Healthyzerocarbon</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero Carbon Tracker</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f4f9f4;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+        }
 
-  <!-- สำคัญมากสำหรับมือถือ -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <link rel="icon" href="image/Logo.png">
-  <link rel="stylesheet" href="walk.css" />
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* การ์ดด้านบน (เขียวอ่อน) */
+        .status-card {
+            background-color: #baff99;
+            border-radius: 25px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .walker-box img {
+            width: 120px;
+            height: auto;
+            
+        }
+
+        .data-box {
+            text-align: right;
+        }
+
+        .main-count {
+            font-size: 50px;
+            font-weight: bold;
+            color: #1a1a1a;
+            line-height: 1;
+        }
+
+        .unit-label {
+            font-size: 20px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* การ์ดสถิติรอง (Km & CO2) */
+        .sub-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .stat-item small { color: #666; font-size: 12px; display: block; }
+        .stat-item strong { font-size: 20px; color: #2d5a27; }
+
+        /* แผนที่ */
+        #map-container {
+            height: 300px;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid white;
+        }
+
+        #map { height: 100%; width: 100%; }
+
+        .btn-control {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 50px;
+            border: none;
+            background: #2d5a27;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="app">
-    <h1>🚶‍♂️ NU HealthyZerocarbon</h1>
-
-    <div class="card">
-      <div class="item">
-        <span class="label">ระยะทาง</span>
-        <span class="value"><span id="distance">0</span> km</span>
-      </div>
-
-      <div class="item">
-        <span class="label">ลดคาร์บอน</span>
-        <span class="value green"><span id="carbon">0</span> gCO₂</span>
-      </div>
+<div class="app-container">
+    <div class="status-card">
+        <div class="walker-box">
+            <img src="image/walk.gif" alt="walking">
+        </div>
+        <div class="data-box">
+            <span class="unit-label">Count :</span>
+            <div class="main-count" id="steps">0</div>
+            <span class="unit-label">Steps 👣</span>
+        </div>
     </div>
 
-    <div class="buttons">
-      <button class="start" onclick="startTracking()">เริ่มเดิน</button>
-      <button class="stop" onclick="stopTracking()">หยุด</button>
+    <div class="sub-stats">
+        <div class="stat-item">
+            <small>Distance</small>
+            <strong id="km">0.00</strong> <small>km</small>
+        </div>
+        <div class="stat-item">
+            <small>CO2 Saved</small>
+            <strong id="co2" style="color: #4CAF50;">0.0</strong> <small>gCO₂</small>
+        </div>
     </div>
 
-    <p id="result" style="font-size:16px;color:#1b5e20;"></p>
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
 
-    <p class="hint">📍 กรุณาเปิด GPS และใช้งานบนมือถือ</p>
-  </div>
+    <button class="btn-control" id="startBtn">START WALKING</button>
+</div>
 
-  <a href="index.html">ย้อนกลับ</a>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    let map = L.map('map').setView([13.7563, 100.5018], 17);
+    let marker, pathPoints = [], isTracking = false;
+    let totalDistance = 0; // กิโลเมตร
 
-  <script src="script.js"></script>
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
+
+    // สูตรคำนวณระยะทางจากพิกัด (Haversine)
+    function getDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    function updatePosition(position) {
+        if (!isTracking) return;
+
+        const { latitude, longitude } = position.coords;
+        const currentPos = [latitude, longitude];
+
+        if (pathPoints.length > 0) {
+            const lastPos = pathPoints[pathPoints.length - 1];
+            const dist = getDistance(lastPos[0], lastPos[1], latitude, longitude);
+            
+            if (dist > 0.002) { // อัปเดตเมื่อขยับเกิน 2 เมตร เพื่อความนิ่งของตัวเลข
+                totalDistance += dist;
+                pathPoints.push(currentPos);
+                
+                // คำนวณค่าต่างๆ
+                const steps = Math.floor(totalDistance * 1315); // เฉลี่ย 1km = 1315 ก้าว
+                const co2Saved = (totalDistance * 180).toFixed(1); // เฉลี่ยลด CO2 180g ต่อ 1km (เทียบรถยนต์)
+
+                // อัปเดต UI
+                document.getElementById('steps').innerText = steps.toLocaleString();
+                document.getElementById('km').innerText = totalDistance.toFixed(2);
+                document.getElementById('co2').innerText = co2Saved;
+
+                // วาดจุดไข่ปลาบนแผนที่
+                L.circleMarker(currentPos, {
+                    radius: 4,
+                    fillColor: "#4A00FF",
+                    color: "white",
+                    weight: 2,
+                    fillOpacity: 0.8
+                }).addTo(map);
+            }
+        } else {
+            pathPoints.push(currentPos);
+        }
+
+        // อัปเดตตำแหน่งปัจจุบัน
+        if (!marker) {
+            marker = L.circleMarker(currentPos, { radius: 10, fillColor: '#2d5a27', color: 'white', fillOpacity: 1 }).addTo(map);
+        } else {
+            marker.setLatLng(currentPos);
+        }
+        map.panTo(currentPos);
+    }
+
+    document.getElementById('startBtn').addEventListener('click', function() {
+        isTracking = !isTracking;
+        this.innerText = isTracking ? "STOP & SAVE" : "START WALKING";
+        this.style.background = isTracking ? "#e57373" : "#2d5a27";
+    });
+
+    navigator.geolocation.watchPosition(updatePosition, null, {
+        enableHighAccuracy: true,
+        distanceFilter: 1
+    });
+</script>
+
 </body>
 </html>
