@@ -6,7 +6,7 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #e8f5e9;
+  background: white;
 }
 
 .app {
@@ -78,7 +78,7 @@ button {
 /* Dashboard */
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kanit', sans-serif; }
 
-body { background: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+body { background: rgb(227, 255, 227); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
 
 .iphone-container {
     width: 375px; height: 780px; background: #fff;
