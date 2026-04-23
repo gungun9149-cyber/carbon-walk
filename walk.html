@@ -205,6 +205,77 @@
         enableHighAccuracy: true,
         distanceFilter: 1
     });
+
+    // 1. ฟังก์ชันสำหรับขออนุญาตและดึงตำแหน่งปัจจุบัน
+function getLocation() {
+    if (navigator.geolocation) {
+        // เบราว์เซอร์จะเด้งถาม "Allow" ที่นี่
+        navigator.geolocation.getCurrentPosition(showPosition, showError, {
+            enableHighAccuracy: true, // ใช้ GPS ความแม่นยำสูง
+            timeout: 5000,
+            maximumAge: 0
+        });
+    } else {
+        alert("เบราว์เซอร์ของคุณไม่รองรับการระบุตำแหน่ง GPS");
+    }
+}
+
+// 2. เมื่อผู้ใช้กด Allow และดึงพิกัดสำเร็จ
+function showPosition(position) {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    const currentPos = [lat, lon];
+
+    console.log("พิกัดปัจจุบัน:", currentPos);
+
+    // เลื่อนแผนที่ไปที่ตำแหน่งจริง
+    map.setView(currentPos, 17);
+
+    // อัปเดต Marker ให้ไปอยู่ที่จุดนั้น
+    if (marker) {
+        marker.setLatLng(currentPos);
+    } else {
+        marker = L.marker(currentPos).addTo(map);
+    }
+}
+
+// 3. กรณีผู้ใช้กด Block หรือมีข้อผิดพลาด
+function showError(error) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            alert("คุณได้ปฏิเสธการเข้าถึงตำแหน่ง กรุณาตั้งค่าอนุญาตที่รูปแม่กุญแจบน Address Bar");
+            break;
+        case error.POSITION_UNAVAILABLE:
+            alert("ไม่สามารถระบุข้อมูลตำแหน่งได้");
+            break;
+        case error.TIMEOUT:
+            alert("การขอข้อมูลตำแหน่งใช้เวลานานเกินไป");
+            break;
+    }
+}
+
+// เรียกใช้ฟังก์ชันทันทีที่โหลดหน้าเว็บ
+window.onload = getLocation;
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+// เปลี่ยนสีเส้นทางเดิน (Polyline)
+pathLine.setStyle({
+    color: "#00FF00", // สีเขียว
+    weight: 6,        // ความหนาของเส้น
+    opacity: 0.8      // ความโปร่งใส
+});
+
+// เปลี่ยนสีจุดพิกัด (CircleMarker)
+L.circleMarker(currentPos, {
+    radius: 5,
+    fillColor: "#00FF00", // สีเขียวสะท้อนแสง
+    color: "#FFFFFF",     // ขอบสีขาว
+    weight: 2,
+    fillOpacity: 1
+}).addTo(map);
 </script>
 
 </body>
