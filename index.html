@@ -1,125 +1,106 @@
-<!DOCTYPE html>
-<html lang="th">
+:root {
+    --green-light: #e2f9d6;
+    --green-dark: #4cd964;
+    --red-soft: #ffeaea;
+    --pink-soft: #fdf0f5;
+    --bg-white: #ffffff;
+    --text-dark: #1a1a1a;
+    --text-gray: #9e9e9e;
+}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NU HealthyZerocarbon</title>
-    <link rel="icon" href="image/Logo.png">
-    <link rel="stylesheet" href="index.css">
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kanit', sans-serif; }
 
-<body>
+body { background: rgb(227, 255, 227); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
 
-    <div class="device-container">
-        <header class="app-header">
-            <div class="user-info">
-                <div class="avatar-circle"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sariya" alt="">
-                </div>
-                <div class="welcome-msg">
-                    <span>Welcome 👋</span>
-                    <h2>Miss Sariya</h2>
-                </div>
-            </div>
-            <div class="header-icons">
-                <button class="icon-btn"><i class="fa-solid fa-search"></i></button>
-                <button class="icon-btn notification"><i class="fa-solid fa-bell"></i></button>
-            </div>
-        </header>
+/* iPhone Frame */
+.device-container {
+    width: 100%; 
+    max-width: 768px; 
+    background: #fff;
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+}
 
-        <div class="scroll-content">
+.padding-x { padding: 0 20px; }
 
-            <section class="padding-x">
-                <div class="challenge-card">
-                    <div class="card-header">
-                        <span class="tag"><i class="fa-solid fa-bolt"></i> Daily Challenge</span>
-                        <i class="fa-solid fa-xmark close"></i>
-                    </div>
-                    <p>วิ่ง 30 วินาที ทำซ้ำ<br>แบบนี้ 5 รอบ</p>
-                    <button class="done-btn">Done ></button>
-                </div>
-            </section>
+/* Fixed Header */
+.app-header {
+    padding: 30px 20px 15px; display: flex; justify-content: space-between; align-items: center;
+    background: #fff; z-index: 10;
+}
+.user-info { display: flex; gap: 12px; align-items: center; }
+.avatar-circle { width: 50px; height: 50px; background: #d0f4c2; border-radius: 50%; }
+.welcome-msg span { font-size: 13px; color: var(--text-gray); }
+.welcome-msg h2 { font-size: 18px; font-weight: 700; }
+.icon-btn { width: 40px; height: 40px; border-radius: 50%; border: none; background: #f8f8f8; cursor: pointer; }
+.notification { background: #fff9e6; color: #ffcc00; }
 
-            <section class="stats-section">
-                <div class="padding-x title-row">
-                    <h3>Today Stats</h3>
-                    <a href="#">See All ></a>
-                </div>
-                <div class="horizontal-scroll">
-                    <div class="stat-card white">
-                        <span class="label">👣 Daily Steps</span>
-                        <div class="graph-svg">
-                            <svg viewBox="0 0 100 40">
-                                <path d="M0 30 Q 25 5, 50 25 T 100 15" fill="none" stroke="#bdf1a3" stroke-width="4" />
-                            </svg>
-                        </div>
-                        <div class="value">900 <small>Steps</small></div>
-                    </div>
-                    <div class="stat-card red">
-                        <span class="label">🔥 Calories</span>
-                        <div class="bar-chart">
-                            <div class="bar" style="height: 40%"></div>
-                            <div class="bar" style="height: 80%"></div>
-                            <div class="bar" style="height: 60%"></div>
-                            <div class="bar" style="height: 90%"></div>
-                        </div>
-                        <div class="value">150 <small>kkal</small></div>
-                    </div>
-                    <div class="stat-card pink">
-                        <span class="label">❤️ Heart Rate</span>
-                        <div class="pulse-line"></div>
-                        <div class="value">80 <small>bpm</small></div>
-                    </div>
-                </div>
-            </section>
+/* Main Scrollable Body */
+.scroll-content { flex: 1; overflow-y: auto; scroll-behavior: smooth; }
+.scroll-content::-webkit-scrollbar { display: none; }
 
-            <section class="padding-x running-section">
-                <h3>Running</h3>
-                <a href="walk.html" style="text-decoration: none; color: inherit;">
-                    <div class="ready-btn" id="runBtn">
-                        <div class="play-icon"><i class="fa-solid fa-play" id="playStatus"></i></div>
-                        <span class="btn-text">READY GO!</span>
-                    </div>
-                </a>
-            </section>
+/* Challenge Card */
+.challenge-card { background: var(--green-light); padding: 25px; border-radius: 30px; position: relative; margin-top: 10px; }
+.card-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+.tag { font-weight: 700; font-size: 14px; }
+.done-btn { background: #fff; border: none; padding: 7px 18px; border-radius: 20px; font-weight: 700; position: absolute; bottom: 20px; right: 20px; cursor: pointer; }
 
-            <section class="padding-x map-section">
-                <div class="title-row">
-                    <h3>Map</h3>
-                    <a href="#">See All ></a>
-                </div>
-                <div class="map-container">
-                    <div class="user-dot"></div>
-                </div>
-            </section>
+/* Horizontal Scroll Stats */
+.stats-section { margin: 30px 0; }
+.title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.title-row h3 { font-size: 20px; font-weight: 700; }
+.title-row a { color: var(--text-gray); font-size: 12px; text-decoration: none; }
 
-            <section class="padding-x activity-section">
-                <div class="title-row">
-                    <h3>Recent Activity</h3>
-                </div>
-                <div class="activity-card">
-                    <div class="date-badge">01 Jun</div>
-                    <div class="activity-info">
-                        <i class="fa-solid fa-clock"></i> 08:00 AM
-                        <p>Jogging at Park</p>
-                    </div>
-                </div>
-            </section>
+.horizontal-scroll {
+    display: flex; gap: 15px; overflow-x: auto; padding: 0 20px 10px;
+    scroll-snap-type: x mandatory;
+}
+.horizontal-scroll::-webkit-scrollbar { display: none; }
 
-            <div class="spacer"></div>
-        </div>
+.stat-card {
+    min-width: 150px; height: 150px; border-radius: 25px; padding: 18px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    scroll-snap-align: start; box-shadow: 0 8px 15px rgba(0,0,0,0.02);
+}
+.stat-card.white { background: #fff; border: 1px solid #f0f0f0; }
+.stat-card.red { background: var(--red-soft); }
+.stat-card.pink { background: var(--pink-soft); }
+.label { font-size: 11px; font-weight: 700; }
+.value { font-size: 18px; font-weight: 800; }
+.value small { font-size: 11px; color: var(--text-gray); font-weight: 400; }
 
-        <nav class="bottom-nav">
-            <button class="nav-btn active"><i class="fa-solid fa-house"></i></button>
-            <div class="nav-center">
-            </div>
-            <button class="nav-btn"><i class="fa-solid fa-user"></i></button>
-        </nav>
-    </div>
+.bar-chart { display: flex; align-items: flex-end; gap: 4px; height: 40px; }
+.bar { flex: 1; background: rgba(255,255,255,0.6); border-radius: 3px; }
 
-    <script src="index.js"></script>
-</body>
+/* Running Button */
+.running-section h3 { margin-bottom: 15px; }
+.ready-btn {
+    background: var(--green-light); border: 5px solid #fff; border-radius: 50px;
+    padding: 12px 20px; display: flex; align-items: center; gap: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05); cursor: pointer; transition: 0.2s;
+}
+.play-icon { width: 55px; height: 55px; background: var(--green-dark); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 24px; }
+.btn-text { font-size: 30px; font-weight: 900; letter-spacing: 1px; }
 
-</html>
+/* Map & Activity */
+.map-container { height: 180px; background: #e3f2fd url('https://user-images.githubusercontent.com/101419332/161101150-149f1311-c3b0-459c-851f-633887140811.png') center; background-size: cover; border-radius: 35px; border: 5px solid #fff; position: relative; }
+.user-dot { width: 14px; height: 14px; background: #4285F4; border: 3px solid #fff; border-radius: 50%; position: absolute; top: 40%; left: 60%; }
+
+.activity-section { margin-top: 30px; }
+.activity-card { background: #fff; border: 1px solid #f0f0f0; border-radius: 20px; padding: 15px; display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+.date-badge { background: #fff5e6; color: #ff9800; padding: 5px 10px; border-radius: 10px; font-size: 12px; font-weight: 700; }
+.activity-info { font-size: 13px; color: var(--text-gray); }
+.activity-info p { font-size: 15px; color: var(--text-dark); font-weight: 700; }
+
+.spacer { height: 100px; }
+
+/* Bottom Nav */
+.bottom-nav {
+    position: absolute; bottom: 0; left: 0; width: 100%; height: 85px;
+    background: #fff; display: flex; justify-content: space-around; align-items: center;
+    padding-bottom: 20px; border-top: 1px solid #f5f5f5; z-index: 10;
+}
+.nav-btn { border: none; background: none; font-size: 22px; color: #ddd; cursor: pointer; }
+.nav-btn.active { color: var(--green-dark); }
+.nav-center { position: relative; width: 60px; }
+.plus-btn { width: 60px; height: 60px; background: #1a1a1a; color: #fff; border-radius: 50%; position: absolute; top: -55px; border: 5px solid #fff; font-size: 22px; }

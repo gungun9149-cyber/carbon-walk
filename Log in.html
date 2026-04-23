@@ -1,45 +1,81 @@
-<!DOCTYPE html>
-<html lang="th">
+ * {
+     margin: 0;
+     padding: 0;
+     overflow: hidden;
+ }
 
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <link rel="stylesheet" href="Log in.css">
-    <link rel="icon" href="image/Logo.png">
-</head>
-<body>
+ body {
+     font-family: Arial, sans-serif;
+     background-color: rgb(227, 255, 227);
+     height: 100vh;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     margin: 0;
+     padding: 0
+ }
 
-    <div class="background">
-        <img class="icon" src="image/Logo.png" alt="Logo">
-    </div>
-    
-    <div class="login-box">
-        <h2>กรุณาเข้าสู่ระบบ</h2>
-        <form onsubmit="return login()">
-            <input type="text" id="username" placeholder="ชื่อผู้ใช้" required>
-            <input type="password" id="password" placeholder="รหัสผ่าน" required>
-            <button type="submit">Login</button>
-            <p class="error" id="error"></p>
-        </form>
-    </div>
-</body>
-<script>
-  function login() {
-    const user = document.getElementById("username").value;
-    const pass = document.getElementById("password").value;
+.icon {
+     position: absolute;
+     top: 20px;
+     left: 20px;
+     width: 100px;
+     height: auto;
+ }
 
-    // ตัวอย่าง (ตั้งค่าเอง)
-    const correctUser = "admin";
-    const correctPass = "1234";
+ .background {
+ background-image: url('image/roof.jpg');
+    background-size: cover;      
+    background-position: center; 
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100vh; 
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+ }
+ 
+ .login-box {
+     background: white;
+     padding: 60px;
+     border-radius: 20px;
+     width: 300px;
+     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+     position: absolute;
+ }
 
-    if (user === correctUser && pass === correctPass) {
-      alert("เข้าสู่ระบบสำเร็จ!");
-      window.location.href = "index.html"; // ไปหน้าอื่น
-      return false;
-    } else {
-      document.getElementById("error").innerText = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
-      return false;
-    }
-  }
-</script>
-</html>
+ h2 {
+     text-align: center;
+     margin-bottom: 20px;
+ }
+
+ input {
+     width: 90%;
+     padding: 10px;
+     margin: 10px 0;
+     border: 1px solid #ccc;
+     border-radius: 5px;
+ }
+
+ button {
+     width: 98%;
+     padding: 10px;
+     background: #4dac27;
+     border: none;
+     color: white;
+     font-size: 16px;
+     border-radius: 5px;
+     cursor: pointer;
+     transition: background-color 0.3s
+ }
+
+ button:hover {
+     background: #237c00;
+ }
+
+ .error {
+     color: red;
+     text-align: center;
+     font-size: 14px;
+ }
